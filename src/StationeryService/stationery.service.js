@@ -66,7 +66,7 @@ class StationeryService{
     
     async findOrdByName(ord_name){
         return await this.orders
-            .select('product.id', 'orderlist.id', 'customers.id', 'orderlist.purchased_day',
+            .select('product.id as product_id', 'orderlist.id', 'orderlist.purchased_day', 'product.unit_price',
             'orderlist.total', 'product.prod_name', 'customers.fullname').first()
             .join('product', 'product.id', 'orderlist.prod_id')
             .leftJoin('customers', 'customers.id', 'orderlist.cus_id')
@@ -74,11 +74,19 @@ class StationeryService{
     }
 
     async allOrd(){
-        return await this.orders.select('*');
+        return await this.orders
+            .select('product.id as product_id', 'orderlist.id', 'orderlist.purchased_day', 'product.unit_price',
+            'orderlist.total', 'product.prod_name', 'customers.fullname')
+            .join('product', 'product.id', 'orderlist.prod_id')
+            .leftJoin('customers', 'customers.id', 'orderlist.cus_id')
     } 
 
     async allVIP(){
         return await this.customers.where('vip_mbrshp', 1).select('*');
+    }
+
+    async getProd(id){
+        return await this.products.where('id', id).select("*").first()
     }
 }
 

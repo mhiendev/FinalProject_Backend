@@ -12,14 +12,12 @@ app.get('/', (req, res) => {
     res.json({ message: 'Welcome to contact book application.' });
 });
 
-app.route('/api/customers')
-    .post(stationeryController.createCus)
-
 app.route('/api/products')
     .get(stationeryController.findAllProd)
     .post(stationeryController.createPrd)
 
 app.route('/api/products/:id')
+    .get(stationeryController.getPrd)
     .put(stationeryController.updatePrd)
 
 app.route('/api/customers/vip')
@@ -30,9 +28,6 @@ app.route('/api/orders')
 
 app.route('/api/orders/:id')
     .delete(stationeryController.deleteOrd)
-
-
-
 
 module.exports = app;
 

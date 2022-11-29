@@ -1,24 +1,6 @@
 const StationeryService = require('../StationeryService/stationery.service');
 const ApiError = require('../api-error');
 
-//Create and Save a new Customer
-exports.createCus = async(req, res, next) => {
-    if(!req.body?.fullname){
-        return next(new ApiError(400, 'Fullname can not be empty'));
-    }
-
-    try{
-        const stationeryService = new StationeryService();
-        const stationery = await stationeryService.createCus(req.body);
-        return res.send(stationery);
-    }catch(error){
-        console.log(error);
-        return next(
-            new ApiError(500, 'An error occurred while creating a customer')
-        );
-    }
-};
-
 //Create and Save a new product
 exports.createPrd = async(req, res, next) => {
     if(!req.body?.prod_name){
@@ -78,6 +60,26 @@ exports.findAllOrd = async (req, res, next) => {
     }
     return res.send(orders); 
 }
+
+//Retrieve all orders from the database
+exports.getPrd = async (req, res, next) => {
+    try{
+        const stationeryService = new StationeryService();
+        const product = await stationeryService.getProd(req.params.id);
+        if(!product){
+            return next(new ApiError(404, 'Product not found'));
+        }
+        return res.send(product);
+    }catch(error){
+        console.log(error);
+        return next(
+            new ApiError(
+                500,
+                `Error retrieving product with id=${req.params.id}`
+            )
+        );
+    }
+};
 
 //Update a product
 exports.updatePrd = async(req, res, next) => {
